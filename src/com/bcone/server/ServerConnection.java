@@ -1,13 +1,17 @@
 package com.bcone.server;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -69,6 +73,101 @@ public class ServerConnection {
 		}
 
 		return response;
+	}
+
+	public String getRequest(String url) {
+		String REQurl = url;
+		System.out.println("REQurl == " + REQurl);
+		String response = "";
+		String responseStr = "";
+		DefaultHttpClient client = new DefaultHttpClient();
+		client.getCredentialsProvider().setCredentials(AuthScope.ANY,
+				new UsernamePasswordCredentials("PEREIRAS", "bconetea123"));
+		HttpGet getRequest = new HttpGet(REQurl);
+
+		try {
+			getRequest.setURI(new URI(REQurl));
+			getRequest.setHeader("Content-Type", "text/xml");
+			getRequest.setHeader("Host", getRequest.getURI().getHost());
+			HttpResponse execute = client.execute(getRequest);
+
+			InputStream content = execute.getEntity().getContent();
+
+			BufferedReader buffer = new BufferedReader(new InputStreamReader(
+					content));
+			String s = "";
+			while ((s = buffer.readLine()) != null) {
+				response += s;
+			}
+			execute.getEntity().consumeContent();
+			responseStr = response.toString();
+			System.out.println("DESC RESPONSE === " + response.toString());
+
+			// int userIDIndex = responseStr.indexOf("USER ID:"); // 8+1 blank
+			// // space
+			// System.out.println("userIndex = " + userIDIndex);
+			//
+			// int userCellIndex = responseStr.indexOf("CELL NUM:");
+			// System.out.println("userCellIndex = " + userCellIndex);
+			//
+			// int userEmailIndex = responseStr.indexOf("EMAIL ID :");
+			// System.out.println("userEmailIndex = " + userEmailIndex);
+			//
+			// int userFirstNameIndex = responseStr.indexOf("FIRST NAME:");
+			// System.out.println("userFirstNameIndex = " + userFirstNameIndex);
+			//
+			// int userLastNameIndex = responseStr.indexOf("LAST NAME:");
+			// System.out.println("userLastNameIndex = " + userLastNameIndex);
+			//
+			// int userEmpIndex = responseStr.indexOf("EMP ID :");
+			// System.out.println("userLastNameIndex = " + userLastNameIndex);
+			//
+			// int description = responseStr.indexOf("</d:description>");
+			// System.out.println("description = " + description);
+			//
+			// // String subId = responseStr.substring(749, 758);
+			// String subId = responseStr
+			// .substring(userIDIndex + 9, userCellIndex);
+			// System.out.println("SubString ID === " + subId);
+			//
+			// String subCell = responseStr.substring(userCellIndex + 10,
+			// userEmailIndex);
+			// System.out.println("SubString CELL === " + subCell);
+			//
+			// String subEmail = responseStr.substring(userEmailIndex + 11,
+			// userFirstNameIndex);
+			// System.out.println("SubString EMAIL === " + subEmail);
+			//
+			// String subFirstName = responseStr.substring(
+			// userFirstNameIndex + 12, userLastNameIndex);
+			// System.out.println("SubString FIRST NAME === " + subFirstName);
+			//
+			// String subLastName = responseStr.substring(userLastNameIndex +
+			// 11,
+			// userEmpIndex);
+			// System.out.println("SubString LAST NAME === " + subLastName);
+			//
+			// String subEmp = responseStr
+			// .substring(userEmpIndex + 9, description);
+			// System.out.println("SubString EMP ID === " + subEmp);
+			//
+			// Descriptiondata descObj = new Descriptiondata();
+			// descObj.setUserId(subId);
+			// descObj.setCell(subCell);
+			// descObj.setEmail(subEmail);
+			// descObj.setFirstname(subFirstName);
+			// descObj.setLastname(subLastName);
+			// descObj.setEmpid(subEmp);
+			//
+			// descVector = new Vector();
+			// descVector.add(descObj);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			// System.out.println(e.toString());
+		}
+
+		return responseStr;
 	}
 
 	/**
