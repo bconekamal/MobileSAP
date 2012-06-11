@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 
 public class MobileSAPActivity extends Activity {
-	/** Called when the activity is first created.harshal */
+	/** Called when the activity is first created.tejasvi */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
